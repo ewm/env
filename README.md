@@ -1,4 +1,8 @@
 env
 ===
 
-Environment setup
+Environment setup.
+
+.vimrc
+.bashrc
+.gitconfig
