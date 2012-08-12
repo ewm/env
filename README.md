@@ -3,6 +3,6 @@ env
 
 Environment setup.
 
-.vimrc
-.bashrc
-.gitconfig
+.vimrc <br>
+.bashrc <br>
+.gitconfig <br>
