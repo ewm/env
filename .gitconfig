@@ -1,0 +1,70 @@
+# This is Git's per-user configuration file.
+
+[user]
+    name = Eric Musso
+    email = ewmusso@gmail.com
+
+[color]
+    branch = auto
+    diff = auto
+    interactive = auto
+    pager = true
+    status = auto
+    ui = true
+
+[color "status"]
+    added = green
+    changed = yellow
+    untracked = red
+
+[push]
+    default = current
+
+[core]
+    autocrlf = input
+    pager = less -FRSX
+
+[alias]
+    co = checkout
+    ec = config --global -e
+
+    # The first command pulls changes from the remote. If I have any local commits, it’ll rebase them to come after the commits I pulled down. 
+    # The --prune option removes remote-tracking branches that no longer exist on the remote.
+    up = !git pull --rebase --prune $@ && git submodule update --init --recursive
+    
+    # start new work and checkout to new branch (you supply the new branch name)
+    cob = checkout -b
+
+    # This adds all changes including untracked files to the index and then creates a commit with the message you provide.
+    cm = !git add -A && git commit -m
+
+    # adds all changes including untracked files and creates a commit. 
+    save = !git add -A && git commit -m 'SAVEPOINT'
+
+    # only commits tracked changes
+    wip = !git add -u && git commit -m "WIP"
+
+    # resets the previous commit, but keeps all the changes from that commit in the working directory.
+    undo = reset HEAD~1 --mixed
+
+    # modify the previous commit
+    amend = commit -a --amend
+
+    # This commits everything in my working directory and then does a hard reset to remove that commit. 
+    # The nice thing is, the commit is still there, but it’s just unreachable. Unreachable commits are a bit inconvenient to restore, but at least they are still there. 
+    # You can run the git reflog command and find the SHA of the commit if you realize later that you made a mistake with the reset.
+    # The commit message will be “WIPE SAVEPOINT” in this case.
+    wipe = !git add -A && git commit -qm 'WIPE SAVEPOINT' && git reset HEAD~1 --hard
+
+    # meant to be run from your master (or default) branch and does the cleanup of merged branches.
+    # deletes every branch that’s been merged into master except master or git bclean develop
+    bclean = "!f() { git branch --merged ${1-master} | grep -v " ${1-master}$" | xargs git branch -d; }; f"
+
+    # Combining git aliases together.
+    bdone = "!f() { git checkout ${1-master} && git up && git bclean ${1-master}; }; f"
+
+    # formatting the git log command
+    lg = log --graph --pretty=format:'%C(yellow)%h%C(auto)%d%Creset %s %C(white)- %an, %ar%Creset'
+
+    # standup = "!git log --reverse --branches --since='$(if [[ "Thu" == "$(date +%a)" ]]; then echo "last friday"; else echo "yesterday"; fi)' --author=$(git config --get user.email) --format=format:'%C(cyan) %ad %C(yellow)%h %Creset %s %Cgreen%d' --date=local"
+    standup = log --pretty=format:'%Cred%h%Creset -%Creset %s %Cgreen(%cD) %C(bold blue)<%an>%Creset' --since='1 month ago' --author='Eric Musso' --all
