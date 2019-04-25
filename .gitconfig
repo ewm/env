@@ -39,7 +39,7 @@
     cm = !git add -A && git commit -m
 
     # adds all changes including untracked files and creates a commit. 
-    save = !git add -A && git commit -m 'SAVEPOINT'
+    save = !git add -A && git commit -m 'SAVEDBREAKPOINT'
 
     # only commits tracked changes
     wip = !git add -u && git commit -m "WIP"
@@ -54,7 +54,7 @@
     # The nice thing is, the commit is still there, but it’s just unreachable. Unreachable commits are a bit inconvenient to restore, but at least they are still there. 
     # You can run the git reflog command and find the SHA of the commit if you realize later that you made a mistake with the reset.
     # The commit message will be “WIPE SAVEPOINT” in this case.
-    wipe = !git add -A && git commit -qm 'WIPE SAVEPOINT' && git reset HEAD~1 --hard
+    wipe = !git add -A && git commit -qm 'WIPE SAVEDBREAKPOINT' && git reset HEAD~1 --hard
 
     # meant to be run from your master (or default) branch and does the cleanup of merged branches.
     # deletes every branch that’s been merged into master except master or git bclean develop
